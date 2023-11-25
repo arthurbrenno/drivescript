@@ -3,6 +3,28 @@ const router = express.Router();
 const moment = require("moment");
 const pool = require("../database");
 
+const verifyToken = (req, res, next) => {
+  const token = req.header("Authorization");
+
+  if (!token) {
+    return res.status(401).json({
+      status: "Unauthorized",
+      message: "Token de acesso não fornecido.",
+    });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded.user;
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      status: "Unauthorized",
+      message: "Token de acesso inválido.",
+    });
+  }
+};
+
 /*
 ..######.
 .##....##
