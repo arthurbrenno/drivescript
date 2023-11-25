@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const pool = require("../database");
 
-router.post("/login", async (req, res) => {
+router.post("/", async (req, res) => {
   const { username, password } = req.body;
 
   if (username === "seu_usuario" && password === "sua_senha") {
