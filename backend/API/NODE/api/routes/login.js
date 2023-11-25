@@ -1,26 +1,42 @@
 const express = require("express");
-const router = express.Router();
 const jwt = require("jsonwebtoken");
-
 const pool = require("../database");
 
+const router = express.Router();
+
 router.post("/", async (req, res) => {
-  const { username, password } = req.body;
+  const { user, password } = req.body;
 
-  if (username === "seu_usuario" && password === "sua_senha") {
-    const user = { username: "seu_usuario" };
+  const query = "SELECT * FROM usuarios WHERE username = ? AND password = ?";
+  const queryParams = [user, password];
 
-    const token = jwt.sign({ user }, process.env.JWT_SECRET, {
-      expiresIn: "1h", 
-    });
+  pool.query(query, queryParams, (error, rows) => {
+    if (error) {
+      return res.status(500).json({
+        status: "Internal Server Error",
+        message: "Ocorreu um erro em tempo de execução.",
+      });
+    }
 
-    res.json({ status: "OK", token });
-  } else {
-    res.status(401).json({
-      status: "Unauthorized",
-      message: "Credenciais inválidas.",
-    });
-  }
+    if (rows.length === 0) {
+      return res.status(401).json({
+        status: "Unauthorized",
+        message: "Credenciais inválidas.",
+      });
+    }
+
+    const usuario = rows[0];
+
+    const nivel_permissao = usuario.nivel_perm;
+
+    const token = jwt.sign(
+      { userid: usuario.id, nivel_permissao: nivel_permissao },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    res.json({ auth: true, token, usuario });
+  });
 });
 
 module.exports = router;

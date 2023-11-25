@@ -11,7 +11,7 @@ app.use(express.json());
 app.use("/api/alunos", alunosRoutes);
 app.use("/api/carros", carrosRoutes);
 app.use("/api/agendamentos", agendamentosRoutes);
-//app.use("/api/login", loginRoute);
+app.use("/api/login", loginRoute);
 
 const port = process.env.PORT;
 app.listen(port, () => {

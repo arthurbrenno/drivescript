@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../database");
+const verificaToken = require("../middleware/auth");
 
 /*
 ..######.
@@ -11,7 +12,15 @@ const pool = require("../database");
 .##....##
 ..######.
 */
-router.get("/:id?", async (req, res) => {
+router.get("/:id?", verificaToken, async (req, res) => {
+
+  if (!req.auth) {
+    return res.status(401).json({
+      status: "Unauthorized",
+      message: "Você não está autenticado.",
+    });
+  }
+
   const id = req.params.id;
 
   let query = id ? "SELECT * FROM carros WHERE id = ?" : "SELECT * FROM CARROS";
@@ -39,7 +48,22 @@ router.get("/:id?", async (req, res) => {
 .##....##.
 .##.....##
 */
-router.post("/criar", async (req, res) => {
+router.post("/criar", verificaToken, async (req, res) => {
+
+  if (!req.auth) {
+    return res.status(401).json({
+      status: "Unauthorized",
+      message: "Você não está autenticado.",
+    });
+  }
+
+  if (req.nivel_permissao !== 0) {
+    return res.status(403).json({
+      status: "Forbidden",
+      message: "Você não tem permissão para criar carros.",
+    });
+  }
+
   const requiredParams = [
     "marca",
     "modelo",
@@ -102,7 +126,21 @@ router.post("/criar", async (req, res) => {
 .##.....##
 ..#######.
 */
-router.put("/update/:id", async (req, res) => {
+router.put("/update/:id", verificaToken, async (req, res) => {
+  if (!req.auth) {
+    return res.status(401).json({
+      status: "Unauthorized",
+      message: "Você não está autenticado.",
+    });
+  }
+
+  if (req.nivel_permissao !== 0) {
+    return res.status(403).json({
+      status: "Forbidden",
+      message: "Você não tem permissão para atualizar carros.",
+    });
+  }
+
   const id = req.params.id;
 
   if (!req.body || Object.keys(req.body).length === 0) {
@@ -151,6 +189,20 @@ router.put("/update/:id", async (req, res) => {
 .########.
 */
 router.delete("/delete/:id", async (req, res) => {
+  if (!req.auth) {
+    return res.status(401).json({
+      status: "Unauthorized",
+      message: "Você não está autenticado.",
+    });
+  }
+
+  if (req.nivel_permissao !== 0) {
+    return res.status(403).json({
+      status: "Forbidden",
+      message: "Você não tem permissão para deletar carros.",
+    });
+  }
+
   const id = req.params.id;
 
   if (!id) {

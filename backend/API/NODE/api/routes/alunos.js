@@ -2,28 +2,7 @@ const express = require("express");
 const router = express.Router();
 const moment = require("moment");
 const pool = require("../database");
-
-const verifyToken = (req, res, next) => {
-  const token = req.header("Authorization");
-
-  if (!token) {
-    return res.status(401).json({
-      status: "Unauthorized",
-      message: "Token de acesso não fornecido.",
-    });
-  }
-
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded.user;
-    next();
-  } catch (error) {
-    return res.status(401).json({
-      status: "Unauthorized",
-      message: "Token de acesso inválido.",
-    });
-  }
-};
+const verificaToken = require("../middleware/auth");
 
 /*
 ..######.
@@ -34,7 +13,22 @@ const verifyToken = (req, res, next) => {
 .##....##
 ..######.
 */
-router.get("/:id?", async (req, res) => {
+router.get("/:id?", verificaToken, async (req, res) => {
+
+  if (!req.auth) {
+    return res.status(401).json({
+      status: "Unauthorized",
+      message: "Você não está autenticado.",
+    });
+  }
+
+  if (req.nivel_permissao !== 0) {
+    return res.status(403).json({
+      status: "Forbidden",
+      message: "Você não tem permissão para listar alunos.",
+    });
+  }
+
   const id = req.params.id;
 
   let query = id ? "SELECT * FROM alunos WHERE id = ?" : "SELECT * FROM ALUNOS";
@@ -69,7 +63,22 @@ router.get("/:id?", async (req, res) => {
 .##....##.
 .##.....##
 */
-router.post("/criar", async (req, res) => {
+router.post("/criar", verificaToken, async (req, res) => {
+
+  if (!req.auth) {
+    return res.status(401).json({
+      status: "Unauthorized",
+      message: "Você não está autenticado.",
+    });
+  }
+
+  if (req.nivel_permissao !== 0) {
+    return res.status(403).json({
+      status: "Forbidden",
+      message: "Você não tem permissão para criar alunos.",
+    });
+  }
+
   const requiredFields = [
     "nome",
     "cpf",
@@ -135,7 +144,22 @@ router.post("/criar", async (req, res) => {
 .##.....##
 ..#######.
 */
-router.put("/update/:id", async (req, res) => {
+router.put("/update/:id", verificaToken, async (req, res) => {
+
+  if (!req.auth) {
+    return res.status(401).json({
+      status: "Unauthorized",
+      message: "Você não está autenticado.",
+    });
+  }
+
+  if (req.nivel_permissao !== 0) {
+    return res.status(403).json({
+      status: "Forbidden",
+      message: "Você não tem permissão para alterar alunos.",
+    });
+  }
+
   const id = req.params.id;
 
   if (!req.body || Object.keys(req.body).length === 0) {
@@ -186,7 +210,22 @@ router.put("/update/:id", async (req, res) => {
 .##.....##
 .########.
 */
-router.delete("/delete/:id", async (req, res) => {
+router.delete("/delete/:id", verificaToken, async (req, res) => {
+
+  if (!req.auth) {
+    return res.status(401).json({
+      status: "Unauthorized",
+      message: "Você não está autenticado.",
+    });
+  }
+
+  if (req.nivel_permissao !== 0) {
+    return res.status(403).json({
+      status: "Forbidden",
+      message: "Você não tem permissão para deletar alunos.",
+    });
+  }
+
   const id = req.params.id;
 
   if (!id) {

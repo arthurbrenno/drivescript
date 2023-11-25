@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const moment = require("moment");
 const pool = require("../database");
+const verificaToken = require("../middleware/auth");
 
 /*
 ..######.
@@ -13,6 +14,14 @@ const pool = require("../database");
 ..######.
 */
 router.get("/:id?", async (req, res) => {
+
+  if (!req.auth) {
+    return res.status(401).json({
+      status: "Unauthorized",
+      message: "Você não está autenticado.",
+    });
+  }
+
   const id = req.params.id;
 
   let query = id
