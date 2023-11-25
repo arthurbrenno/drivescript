@@ -13,7 +13,7 @@ const verificaToken = require("../middleware/auth");
 .##....##
 ..######.
 */
-router.get("/:id?", async (req, res) => {
+router.get("/:id?", verificaToken, async (req, res) => {
 
   if (!req.auth) {
     return res.status(401).json({
@@ -58,7 +58,15 @@ router.get("/:id?", async (req, res) => {
 .##....##.
 .##.....##
 */
-router.post("/criar", async (req, res) => {
+router.post("/criar", verificaToken, async (req, res) => {
+
+  if (!req.auth) {
+    return res.status(401).json({
+      status: "Unauthorized",
+      message: "Você não está autenticado.",
+    });
+  }
+
   const requiredFields = ["aluno_id", "carro_id", "data_aula", "horario_aula"];
 
   const missingFields = requiredFields.filter(
@@ -113,7 +121,14 @@ router.post("/criar", async (req, res) => {
 .##.....##
 ..#######.
 */
-router.put("/update/:id", async (req, res) => {
+router.put("/update/:id", verificaToken, async (req, res) => {
+  if (!req.auth) {
+    return res.status(401).json({
+      status: "Unauthorized",
+      message: "Você não está autenticado.",
+    });
+  }
+
   const id = req.params.id;
 
   if (!req.body || Object.keys(req.body).length === 0) {
@@ -164,7 +179,15 @@ router.put("/update/:id", async (req, res) => {
 .##.....##
 .########.
 */
-router.delete("/delete/:id", async (req, res) => {
+router.delete("/delete/:id", verificaToken, async (req, res) => {
+  
+  if (!req.auth) {
+    return res.status(401).json({
+      status: "Unauthorized",
+      message: "Você não está autenticado.",
+    });
+  }
+
   const id = req.params.id;
 
   if (!id) {
