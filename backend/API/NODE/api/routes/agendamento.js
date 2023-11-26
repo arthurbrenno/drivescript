@@ -13,51 +13,6 @@ const verificaToken = require("../middleware/auth");
 .##....##
 ..######.
 */
-router.get("/:id?", verificaToken, async (req, res) => {
-
-  if (!req.auth) {
-    return res.status(401).json({
-      status: "Unauthorized",
-      message: "Você não está autenticado.",
-    });
-  }
-
-  const id = req.params.id;
-
-  let query = id
-    ? "SELECT * FROM agendamentos WHERE id = ?"
-    : "SELECT * FROM agendamentos";
-  let queryParams = id ? [id] : [];
-
-  pool.query(query, queryParams, (error, rows) => {
-    if (error) {
-      return res.status(500).json({
-        status: "Internal Server Error",
-        message: "Ocorreu um erro em tempo de execução.",
-      });
-    }
-
-    if (id && rows.length === 0) {
-      return res.status(404).json({
-        status: "Not Found",
-        message: "Nenhum agendamento encontrado com o ID fornecido.",
-      });
-    } else {
-      const response = { agendamentos: rows };
-      res.json(response);
-    }
-  });
-});
-
-/*
-.########.
-.##.....##
-.##.....##
-.########.
-.##...##..
-.##....##.
-.##.....##
-*/
 router.post("/criar", verificaToken, async (req, res) => {
 
   if (!req.auth) {
@@ -110,6 +65,52 @@ router.post("/criar", verificaToken, async (req, res) => {
       res.json({ status: "OK", data: agendamentoInserido });
     }
   );
+});
+
+
+/*
+.########.
+.##.....##
+.##.....##
+.########.
+.##...##..
+.##....##.
+.##.....##
+*/
+router.get("/:id?", verificaToken, async (req, res) => {
+
+  if (!req.auth) {
+    return res.status(401).json({
+      status: "Unauthorized",
+      message: "Você não está autenticado.",
+    });
+  }
+
+  const id = req.params.id;
+
+  let query = id
+    ? "SELECT * FROM agendamentos WHERE id = ?"
+    : "SELECT * FROM agendamentos";
+  let queryParams = id ? [id] : [];
+
+  pool.query(query, queryParams, (error, rows) => {
+    if (error) {
+      return res.status(500).json({
+        status: "Internal Server Error",
+        message: "Ocorreu um erro em tempo de execução.",
+      });
+    }
+
+    if (id && rows.length === 0) {
+      return res.status(404).json({
+        status: "Not Found",
+        message: "Nenhum agendamento encontrado com o ID fornecido.",
+      });
+    } else {
+      const response = { agendamentos: rows };
+      res.json(response);
+    }
+  });
 });
 
 /*

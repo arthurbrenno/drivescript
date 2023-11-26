@@ -188,7 +188,7 @@ router.put("/update/:id", verificaToken, async (req, res) => {
 .##.....##
 .########.
 */
-router.delete("/delete/:id", async (req, res) => {
+router.delete("/delete/:id", verificaToken, async (req, res) => {
   if (!req.auth) {
     return res.status(401).json({
       status: "Unauthorized",
