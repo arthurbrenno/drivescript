@@ -1,18 +1,53 @@
+/*
+.####.##.....##.########...#######..########..########..######.
+..##..###...###.##.....##.##.....##.##.....##....##....##....##
+..##..####.####.##.....##.##.....##.##.....##....##....##......
+..##..##.###.##.########..##.....##.########.....##.....######.
+..##..##.....##.##........##.....##.##...##......##..........##
+..##..##.....##.##........##.....##.##....##.....##....##....##
+.####.##.....##.##.........#######..##.....##....##.....######.
+*/
 const express = require("express");
-const app = express();
+const app     = express();
+const path    = require('path');
 
-app.use('/', require('./routes/home'));
 
-const getCurrentTime = () => {
-    const now     = new Date();
-    const hours   = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
-    return `${hours}:${minutes}:${seconds}`;
+
+/*
+.########...#######..########....###.....######.
+.##.....##.##.....##....##......##.##...##....##
+.##.....##.##.....##....##.....##...##..##......
+.########..##.....##....##....##.....##..######.
+.##...##...##.....##....##....#########.......##
+.##....##..##.....##....##....##.....##.##....##
+.##.....##..#######.....##....##.....##..######.
+*/
+app.use('/home', require('./routes/home'));
+
+
+
+
+
+/*
+..######...#######..##....##.########.####..######..
+.##....##.##.....##.###...##.##........##..##....##.
+.##.......##.....##.####..##.##........##..##.......
+.##.......##.....##.##.##.##.######....##..##...####
+.##.......##.....##.##..####.##........##..##....##.
+.##....##.##.....##.##...###.##........##..##....##.
+..######...#######..##....##.##.......####..######..
+*/
+app.set('views', path.join(__dirname, 'views'));
+const obterTempoAtual = () => {
+    const now      = new Date();
+    const horas    = now.getHours().toString().padStart(2, '0');
+    const minutos  = now.getMinutes().toString().padStart(2, '0');
+    const segundos = now.getSeconds().toString().padStart(2, '0');
+    return `${horas}:${minutos}:${segundos}`;
 };
 
 app.listen(8000, () => {
     console.clear();
     console.log(`[online] Servidor FrontEnd`);
-    console.log(`Última atualização: ${getCurrentTime()}`)
+    console.log(`Última atualização: ${obterTempoAtual()}`)
 });
