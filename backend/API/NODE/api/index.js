@@ -15,5 +15,5 @@ app.use("/api/login", loginRoute);
 
 const port = process.env.PORT;
 app.listen(port, () => {
-  console.log(`API na porta ${port}`);
+  console.log(`API DEPLOYED! => ${port}`);
 });
