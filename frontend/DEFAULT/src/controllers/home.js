@@ -43,10 +43,12 @@ const getHome = async (req, res) => {
          * requisição para o backend,   *
          * usariamos o axios.           *
          ********************************/
-        const res = await http.post(`${rotaBackend}/login`, {
+        const response = await http.post(`${rotaBackend}/login`, {
             user: "admin",
             password:"admin",
         });
+
+        console.log(response.data);
         
         /****************************************
          * Renderizando e mandando uma resposta *
