@@ -1,0 +1,17 @@
+{
+    "name": "aw/drivescript",
+    "description": "uma autoescola basica",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Aw\\Drivescript\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Arthur-Brenno",
+            "email": "64020210+arthurbrenno@users.noreply.github.com"
+        }
+    ],
+    "require": {}
+}
