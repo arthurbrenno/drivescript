@@ -11,7 +11,6 @@ $id = $_SESSION['password'];
 
 echo "Usuário: $usuario, ID: $id";
 
-
 echo <<<HTML
 
 
@@ -32,7 +31,7 @@ echo <<<HTML
     <body>
         <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="index.php">Home</a>
+            <a class="nav-link" aria-current="page" href="index.php">Home</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="aulaAgendamento.php">Agendar Aulas</a>
@@ -41,55 +40,44 @@ echo <<<HTML
             <a class="nav-link" href="alunoCadastro.php">Cadastrar Alunos</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="carroCadastro.php">Cadastrar Carro</a>
+            <a class="nav-link active" href="carroCadastro.php">Cadastrar Carro</a>
         </li>
         </ul>
-        <h1>Autoescola Brennende</h1>
 
-        <div class='box'>
+        <br><br><br>
+        <h5>A seguir informe os dados do novo veículo.</h5>
+
+        <div class="box">
             <form action="exemplo.php" method="post">
-                <input type="text" name="username" placeholder="username">
-                <input type="password" name="password" placeholder="password">
-                <input class="btn btn-primary" type="submit" value="Login">
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-default">Modelo</span>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="modelo">
+                <span class="input-group-text" id="inputGroup-sizing-default">Placa</span>
+                <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="placa">
+            </div>
+            <div class="input-group mb-3">
+                <select class="form-select" aria-label="Disabled select example">
+                    <option selected>Veículo</option>
+                    <option value="1">Moto</option>
+                    <option value="2">Carro</option>
+                    <option value="3">Ônibus</option>
+                    <option value="4">Caminhão</option>
+                </select>
+                <select class="form-select" aria-label="Disabled select example">
+                    <option selected>Cor</option>
+                    <option value="1">Preto</option>
+                    <option value="2">Branco</option>
+                    <option value="3">Vermelho</option>
+                    <option value="4">Laranja</option>
+                </select>
+            </div>
+            <input class="btn btn-primary" type="submit" value="Cadastrar">
             </form>
         </div>
-       
 
-<script>
-            async function login() {
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
+        <script src="" async defer></script>
 
-                try {
-                    const response = await axios.post('http://localhost:3000/login', {
-                        username: username,
-                        password: password
-                    });
-
-                    // Obtendo o token do response
-                    const token = response.data.token;
-
-                    // Salvando o token nos cookies
-                    Cookies.set('token', token);
-
-                    // Exemplo de como fazer uma requisição autenticada
-                    const fetchData = await axios.get('http://localhost:3000/sua-rota-aqui', {
-                        headers: {
-                            'x-access-token': token
-                        }
-                    });
-
-                    // Aqui você pode manipular os dados retornados pela requisição autenticada
-                    console.log('Dados da requisição:', fetchData.data);
-                } catch (error) {
-                    console.error('Erro ao fazer login:', error);
-                }
-            }
-        </script>
-
-       <!--<script src="" async defer></script>-->
-
-    </body>
+</body>
 </html>
 
 
