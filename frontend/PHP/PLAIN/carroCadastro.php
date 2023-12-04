@@ -3,13 +3,11 @@
  * Importante. Carregar o autoload *
  * do composer.                    *
  ***********************************/
-require_once dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
 session_start();
-$usuario = $_SESSION['username'];
-$id = $_SESSION['password'];
+$usuario = $_SESSION['username'] ?? '';
+$id = $_SESSION['password'] ?? '';
 
-echo "Usuário: $usuario, ID: $id";
 
 echo <<<HTML
 
