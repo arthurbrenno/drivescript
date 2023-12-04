@@ -75,3 +75,100 @@ async fn main() -> std::io::Result<()> {
 
     Ok(())
 }
+
+
+/**
+use actix_web::{web, App, HttpResponse, HttpServer};
+use jsonwebtoken::{encode, EncodingKey, Header};
+use serde::{Serialize, Deserialize};
+use sqlx::{MySql, Pool, Row};
+use std::env;
+
+#[derive(Debug, Serialize, Deserialize)]
+struct Claims {
+    userid: i32,
+    nivel_permissao: i32,
+    exp: usize,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct UserData {
+    user: String,
+    password: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct AuthResponse {
+    auth: bool,
+    token: String,
+    usuario: UserData,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+struct AuthError {
+    status: &'static str,
+    message: &'static str,
+}
+
+async fn login(data: web::Json<UserData>, pool: web::Data<Pool<MySql>>) -> HttpResponse {
+    let user = data.user.clone();
+    let password = data.password.clone();
+
+    // Consulta ao banco de dados
+    let query = "SELECT * FROM usuarios WHERE username = ? AND password = ?";
+    let row = sqlx::query(query)
+        .bind(&user)
+        .bind(&password)
+        .fetch_one(pool.get_ref())
+        .await;
+
+    match row {
+        Ok(row) => {
+            // Crie o token JWT
+            let claims = Claims {
+                userid: row.get("id"),
+                nivel_permissao: row.get("nivel_perm"),
+                exp: 10_000_000_000, // Define o tempo de expiração do token (10 bilhões de segundos)
+            };
+
+            let jwt_secret = "autodrivescript";
+            let key = EncodingKey::from_secret(jwt_secret.as_ref());
+            let token = encode(&Header::default(), &claims, &key).unwrap();
+
+            HttpResponse::Ok().json(AuthResponse {
+                auth: true,
+                token,
+                usuario: UserData { user, password: "".to_string() },
+            })
+        }
+        Err(_) => HttpResponse::Unauthorized().json(AuthError {
+            status: "Unauthorized",
+            message: "Credenciais inválidas.",
+        }),
+    }
+}
+
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    // Configuração do banco de dados
+    let db_host = env::var("DB_HOST").unwrap_or_else(|_| String::from("localhost"));
+    let db_user = env::var("DB_USER").unwrap_or_else(|_| String::from("root"));
+    let db_pass = env::var("DB_PASS").unwrap_or_else(|_| String::from(""));
+    let db_name = env::var("DATABASE").unwrap_or_else(|_| String::from("drivescript"));
+
+    let db_url = format!("mysql://{}:{}@{}/{}", db_user, db_pass, db_host, db_name);
+
+    // Criação do pool de conexão com o banco de dados
+    let pool = Pool::<MySql>::connect(&db_url).await.unwrap();
+
+    // Inicialização do servidor Actix com o pool de banco de dados como dado compartilhado
+    HttpServer::new(move || {
+        App::new()
+            .app_data(web::Data::new(pool.clone()))
+            .service(web::resource("/api/login").route(web::post().to(login)))
+    })
+    .bind("127.0.0.1:3000")?
+    .run()
+    .await
+}
+*/
