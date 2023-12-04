@@ -1,16 +1,18 @@
-<php
-
 <?php
+/***********************************
+ * Importante. Carregar o autoload *
+ * do composer.                    *
+ ***********************************/
 
-/*********************************************************************************
- * Aqui você pode brincar com as rotas pra ver o que está chegando.              *
- * Sempre use o curl porque é mais fácil. Se quiser pode usar javascript também! *
- *********************************************************************************/
+use Aw\Drivescript\config\Config;
 
-$config = require_once 'config.php';
-$rotaApi = $config['ROTA_API'];
-$rotaDesejada = '???';
+$rotaApi = Config::ROTA_API;
+$rotaDesejada = '/login';
 
+
+/**************************************
+ * COMO CHAMAR ALGUMA ROTA DO BACKEND *
+ **************************************/
 $ch = curl_init($rotaApi . $rotaDesejada);
 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
