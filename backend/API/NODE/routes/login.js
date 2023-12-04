@@ -14,7 +14,7 @@ router.post("/", async (req, res) => {
     if (error) {
       return res.status(500).json({
         status: "Internal Server Error",
-        message: "Ocorreu um erro em tempo de execução.",
+        message: `Ocorreu um erro com o banco de dados. -> ${error}`,
       });
     }
 
@@ -30,7 +30,8 @@ router.post("/", async (req, res) => {
     const nivel_permissao = usuario.nivel_perm;
 
     const token = jwt.sign(
-      { userid: usuario.id, nivel_permissao: nivel_permissao },
+      { userid: usuario.id, 
+        nivel_permissao: nivel_permissao },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
