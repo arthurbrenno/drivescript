@@ -16,12 +16,7 @@ try {
 
     $sqlScripts = file_get_contents('drivescript.sql');
     $conn->exec($sqlScripts);
-    echo "Scripts SQL executados com sucesso.\n";
-
-    $sqlAddAdminUser = "INSERT INTO `usuarios` (`username`, `password`, `nivel_perm`) VALUES ('admin', 'admin', 0)";
-    $conn->exec($sqlAddAdminUser);
-    echo "Usuário 'admin' adicionado com sucesso.\n";
-
+    
 } catch (PDOException $e) {
     echo "Erro: " . $e->getMessage() . "\n";
 }
