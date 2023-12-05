@@ -2,6 +2,7 @@
 $token = isset($_COOKIE['token']) ? $_COOKIE['token'] : null;
 $api_base_url = 'http://localhost:3000/api/alunos/';
 
+// Função para fazer uma requisição à API
 function makeRequest($method, $url, $data = null) {
     global $token;
 
@@ -38,6 +39,23 @@ function displayAlunoRow($aluno) {
     echo "</tr>";
 }
 
+// Adicionar novo aluno
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'adicionar_aluno') {
+    // Verificar se todos os campos estão presentes
+    if (isset($_POST['nome'], $_POST['cpf'], $_POST['data_nascimento'], $_POST['endereco'], $_POST['telefone'])) {
+        $novoAluno = [
+            'nome' => $_POST['nome'],
+            'cpf' => $_POST['cpf'],
+            'data_nascimento' => $_POST['data_nascimento'],
+            'endereco' => $_POST['endereco'],
+            'telefone' => $_POST['telefone'],
+        ];
+
+        // Fazer uma requisição POST à API para adicionar o novo aluno
+        makeRequest('POST', $api_base_url . 'criar', $novoAluno);
+    }
+}
+
 // Listar todos os alunos
 $alunos = makeRequest('GET', $api_base_url);
 ?>
@@ -50,23 +68,32 @@ $alunos = makeRequest('GET', $api_base_url);
     <title>Gerenciamento de Alunos</title>
     <script>
         // Função para editar um aluno
-        async function editAluno(id) {
-            
+        function editAluno(id) {
+            // Implementar a lógica de edição conforme necessário
+            alert('Implemente a lógica para editar o aluno com ID ' + id);
         }
 
         // Função para excluir um aluno
-        async function deleteAluno(id) {
-            //make a DELETE request to the API http://localhost:3000/api/alunos/delete/{id}
-            //use the fetch api
-            //use the async/await syntax
-            //use the try/catch syntax
-            const response = await fetch('http://localhost:3000/api/alunos/delete/' + id, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-access-token': '<?= $token ?>',
-                },
-            });
+        function deleteAluno(id) {
+            // Confirmar a exclusão com o usuário
+            if (confirm('Deseja realmente excluir este aluno?')) {
+                // Fazer uma requisição DELETE à API para excluir o aluno
+                fetch('http://localhost:3000/api/alunos/delete/' + id, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-access-token': '<?= $token ?>',
+                    },
+                })
+                .then(response => {
+                    // Recarregar a página após a exclusão
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Erro ao excluir aluno:', error);
+                    alert('Erro ao excluir aluno. Por favor, tente novamente.');
+                });
+            }
         }
     </script>
 </head>
@@ -94,6 +121,45 @@ $alunos = makeRequest('GET', $api_base_url);
         </tbody>
     </table>
     <br>
-    <button onclick="alert('Implemente a lógica para adicionar um novo aluno')">Adicionar Novo Aluno</button>
+    <!-- Adicionar novo aluno - Exibe uma caixa de diálogo para entrada de dados -->
+    <button onclick="adicionarAluno()">Adicionar Novo Aluno</button>
+
+    <script>
+        function adicionarAluno() {
+            // Exibir caixa de diálogo para entrada de dados do novo aluno
+            const nome = prompt('Digite o nome do novo aluno:');
+            const cpf = prompt('Digite o CPF do novo aluno:');
+            const dataNascimento = prompt('Digite a data de nascimento do novo aluno:');
+            const endereco = prompt('Digite o endereço do novo aluno:');
+            const telefone = prompt('Digite o telefone do novo aluno:');
+
+            // Verificar se o usuário inseriu informações
+            if (nome && cpf && dataNascimento && endereco && telefone) {
+                // Fazer uma requisição POST à API para adicionar o novo aluno
+                fetch('http://localhost:3000/api/alunos/criar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-access-token': '<?= $token ?>',
+                    },
+                    body: JSON.stringify({
+                        nome: nome,
+                        cpf: cpf,
+                        data_nascimento: dataNascimento,
+                        endereco: endereco,
+                        telefone: telefone,
+                    }),
+                })
+                .then(response => {
+                    // Recarregar a página após a adição
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Erro ao adicionar aluno:', error);
+                    alert('Erro ao adicionar aluno. Por favor, tente novamente.');
+                });
+            }
+        }
+    </script>
 </body>
 </html>

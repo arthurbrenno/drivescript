@@ -1,0 +1,39 @@
+db.createCollection("carros")
+db.carros.insert({
+  "marca": "Toyota",
+  "modelo": "Corolla",
+  "ano": 2022,
+  "placa": "ABC123",
+  "capacidade_passageiros": 5
+});
+
+db.createCollection("alunos")
+db.alunos.insert({
+  "nome": "João Silva",
+  "cpf": "123.456.789-00",
+  "data_nascimento": ISODate("1990-01-01"),
+  "endereco": "Rua XYZ, 123",
+  "telefone": "(11) 1234-5678"
+});
+
+db.createCollection("agendamentos")
+db.agendamentos.insert({
+  "aluno_id": 1,
+  "carro_id": 1,
+  "data_aula": ISODate("2023-01-01"),
+  "horario_aula": ISODate("2023-01-01T08:00:00Z")
+});
+
+
+db.createCollection("usuarios")
+db.usuarios.insert({
+  "username": "admin",
+  "password": "admin",
+  "nivel_perm": 0
+});
+
+db.usuarios.insert({
+  "username": "aluno",
+  "password": "aluno",
+  "nivel_perm": 1
+});
