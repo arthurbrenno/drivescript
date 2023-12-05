@@ -33,7 +33,7 @@ func main() {
 	app := fiber.New()
 
 	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
+		return c.SendString("Olá mundo!")
 	})
 
 	app.Post("/api/login", func(c *fiber.Ctx) error {
@@ -73,7 +73,7 @@ func main() {
 			},
 		})
 
-		tokenString, err := token.SignedString([]byte("sua_chave_secreta_aqui"))
+		tokenString, err := token.SignedString([]byte("autodrivescript"))
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"error": "Erro ao criar o token",
@@ -83,7 +83,7 @@ func main() {
 		return c.JSON(fiber.Map{
 			"auth":    true,
 			"token":   tokenString,
-			"usuario": fiber.Map{"user": userData.User, "password": ""}, // A senha nunca deve ser enviada ao cliente
+			"usuario": fiber.Map{"user": userData.User, "password": ""}, 
 		})
 	})
 

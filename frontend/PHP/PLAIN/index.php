@@ -51,7 +51,6 @@ echo <<<HTML
             <input class="btn btn-primary" type="submit" value="Login" onClick="login()">
         </div>
        
-
         <script>
             async function login() {
                 const username = document.getElementById('username').value;
@@ -74,7 +73,7 @@ echo <<<HTML
                     Cookies.set('token', token);
 
                     // Aqui você pode manipular os dados retornados pela requisição autenticada
-                    console.log('Dados da requisição:', fetchData.data);
+                    console.log('Dados da requisição:', response.data);
                 } catch (error) {
                     console.error('Erro ao fazer login:', error);
                 }
