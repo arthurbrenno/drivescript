@@ -87,7 +87,6 @@ func main() {
 		})
 	})
 
-	// Altere a porta conforme necessário
 	port := 3000
 	log.Fatal(app.Listen(fmt.Sprintf(":%d", port)))
 }
